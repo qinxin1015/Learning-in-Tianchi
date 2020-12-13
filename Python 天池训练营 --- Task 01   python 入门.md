@@ -441,21 +441,134 @@ print(c)
 
 ## 异常处理
 
-# 未完待续。。。
+异常就是运行期检测到的错误。计算机语言针对可能出现的错误定义了异常类型，某种错误引发对应的异常时，异常处理程序将被启动，从而恢复程序的正常运行。
+
+![Python异常体系中的部分关系](https://img-blog.csdnimg.cn/20200710131404548.png)
+
+---
+#### 1. try - except 语句
+```python
+try:
+    检测范围
+except Exception[as reason]:
+    出现异常后的处理代码
+```
+
+try 语句按照如下方式工作：
+- 首先，执行`try`子句（在关键字`try`和关键字`except`之间的语句）
+- 如果没有异常发生，忽略`except`子句，`try`子句执行后结束。
+- 如果在执行`try`子句的过程中发生了异常，那么`try`子句余下的部分将被忽略。如果异常的类型和`except`之后的名称相符，那么对应的`except`子句将被执行。最后执行`try - except`语句之后的代码。
+- 如果一个异常没有与任何的`except`匹配，那么这个异常将会传递给上层的`try`中。
+
+```python
+try:
+    f = open('test.txt')
+    print(f.read())
+    f.close()
+except OSError:
+    print('打开文件出错')
+
+# 打开文件出错
+```
+处理多分支可能异常
+```python
+try:
+    int("abc")
+    s = 1 + '1'
+    f = open('test.txt')
+    print(f.read())
+    f.close()
+except OSError as error:
+    print('打开文件出错\n原因是：' + str(error))
+except TypeError as error:
+    print('类型出错\n原因是：' + str(error))
+except ValueError as error:
+    print('数值出错\n原因是：' + str(error))
+
+# 数值出错
+# 原因是：invalid literal for int() with base 10: 'abc'
+```
+---
+#### 2. try - except - finally 语句
+try:
+    检测范围
+except Exception[as reason]:
+    出现异常后的处理代码
+finally:
+    无论如何都会被执行的代码
+
+不管`try`子句里面有没有发生异常，`finally`子句都会执行。
+
+```python
+def divide(x, y):
+    try:
+        result = x / y
+        print("result is", result)
+    except ZeroDivisionError:
+        print("division by zero!")
+    finally:
+        print("executing finally clause")
 
 
+divide(2, 1)
+# result is 2.0
+# executing finally clause
+divide(2, 0)
+# division by zero!
+# executing finally clause
+divide("2", "1")
+# executing finally clause
+# TypeError: unsupported operand type(s) for /: 'str' and 'str'
+```
+---
+#### 3. try - except - else 语句
 
+如果在`try`子句执行时没有发生异常，Python将执行`else`语句后的语句。
+- 注意： 只有 try - except - else 语句，~~没有 try - else 语句~~
 
+```python
+try:
+    检测范围
+except:
+    出现异常后的处理代码
+else:
+    如果没有异常执行这块代码
+```
 
+使用`except`而不带任何异常类型，这不是一个很好的方式，我们不能通过该程序识别出具体的异常信息，因为它捕获所有的异常。
 
+try:
+    检测范围
+except(Exception1[, Exception2[,...ExceptionN]]]):
+   发生以上多个异常中的一个，执行这块代码
+else:
+    如果没有异常执行这块代码
 
+```python
+try:
+    fh = open("testfile.txt", "w")
+    fh.write("这是一个测试文件，用于测试异常!!")
+except IOError:
+    print("Error: 没有找到文件或读取文件失败")
+else:
+    print("内容写入文件成功")
+    fh.close()
 
+# 内容写入文件成功
+```
 
+---
+#### 3. raise语句
 
-
-
-
-
+Python 使用`raise`语句抛出一个指定的异常。
+```python
+try:
+    raise NameError('HiThere')
+except NameError:
+    print('An exception flew by!')
+    
+# An exception flew by!
+```
 
 
 
