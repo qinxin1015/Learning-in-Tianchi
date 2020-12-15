@@ -213,15 +213,100 @@ print(get())  # 0
 ```
 []: https://zhuanlan.zhihu.com/p/26934085"什么是闭包"
 
+[]:https://zhuanlan.zhihu.com/p/102462850
+
+闭包，可以用于异步功能实现。
+即，如果当前操作比较耗时，那么可以利用闭包先调用函数，后面继续执行其他操作，最后调用闭包函数执行结果。
+
+？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？
+
+#### 递归
+
+- 如果一个函数在内部调用自身本身，这个函数就是递归函数。
+
+```python
+def fattorial(n):
+	"实现 n! "
+	if n == 1：
+		return 1
+	return n * factorial(n-1)
+	
+print(factorial(5))  # 120
+```
+【例子】 斐波那契数列 f(n) = f(n-1) + f(n-2), f(0) = 0, f(1) = 1
+
+```python
+def recur_fibo(n):
+	"斐波那契数列"
+	if n < 2:
+		return n
+	return recur_fibo(n-1) + recur_fibo(n-2)
+	
+lst = list()
+for k in range(11):
+	lst.append(recur_fibo(k))
+print(lst)
+# [0,1,1,2,3,5,8,13,21,34,55]
+```
+
+# 匿名函数：Lambda 表达式
+
+在python里 有两类函数：
+- 第一类： 用 def 关键字 定义的正规函数
+- 第二类： 用lambda 关键字定义的匿名函数
+
+```python
+lambda argument_list:expression
+```
+
+```python
+sumary = lambda arg1,arg2: arg1+arg2
+print(sumary(10,20))  # 30
+
+func = lambda *args: sum(args)
+print(func(1,2,3,4,5))  # 15
+```
+匿名函数 常用于 函数式编程的高阶函数
+- 参数是函数 （filter, map）
+- 返回值是函数 （closure）
 
 
+如，在 `filter`和`map`函数中的应用：
 
+- `filter(lamb_func, iterable)` 过滤序列，过滤掉不符合条件(lamb_func)的元素，返回一个迭代器对象，如果要转换为列表，可以使用 `list()` 来转换。
 
+```python
+odd_list = filter(lambda x: x % 2 == 1, range(10) )
+print(list(odd_list))
+# [1,3,5,7,9]
+```
+- `map(lamb_func, *iterables) ` 根据提供的函数，对指定序列做映射
 
+```python
+m1 = map(lambda x: x ** 2, range(1,6))
+print(list(m1))
+# [1,4,9,16,25]
+```
 
+# 类与对象
 
+### 对象 = 属性 + 方法
 
+- 继承： 子类 自动 共享父类之间数据和方法
 
+```python
+class MyList(list):
+	pass
+	
+lst = MyList([1,5,2,7,8])
+lst.append(9)
+lst.sort()
+print(lst)
+# [1,2,5,7,8,9]
+```
+- 在这里，MyList 继承 父类 list 中的所有属性和方法，可以作为子类MyList的方法直接使用
+
+- **多态**：不同对象 对 同一方法 响应不同的行动
 
 
 
