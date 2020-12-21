@@ -288,38 +288,173 @@ print(list(m1))
 # [1,4,9,16,25]
 ```
 
+
+[封装，继承，重写，多态]:https://www.zhihu.com/search?type=content&q=python%20%E5%A4%9A%E6%80%81
+
+
 # 类与对象
 
 ### 对象 = 属性 + 方法
 
-- 继承： 子类 自动 共享父类之间数据和方法
+## self 
+- Python  的self 相当于C++ 的 this 指针。
+
+- python 魔法方法：
+类有一个名为 __init__(self[,param1,param2...]) 的魔法方法，该方法在类实例化时会自动调用。
+
+## 公有和私有
+在python中定义私有变量，在 变量名 或 函数名 前面加 "_\_" (双下划线)，那么这个函数/变量 就变成私有了。
+
+- 私有变量前面加双下划线 "_\_"
+- 私有变量/函数不可以通过  类名.变量名/函数名  进行调用
+- 私有变量也是可以通过其他方法调用，python对象私有化为伪私有化
 
 ```python
-class MyList(list):
-	pass
+class Pig:
+	# Pig 对象被调用时，会自动调用 __init__() 方法
+	def __init__(self, color, age, weight):
+		self.color = color
+		self.age = age
+		self.__weight = weight
+		
+	def How(self):
+		print("This is a {} pig".format(self.color))
+
+	def Quantity(self):
+		if self.age > 30:
+			print("The pig is too old!")
+		else:
+			print("haha,the pig is young")
 	
-lst = MyList([1,5,2,7,8])
-lst.append(9)
-lst.sort()
-print(lst)
-# [1,2,5,7,8,9]
+	def __Price(self):
+		price = self.__weight * 30 + self.age * (-1)
+		print("The saleprice is ",price)
+		return price
+		
+	def SalePrice(self):
+		self.__Price()
+		
+pig = Pig("white", 30,100)
+pig.How()
+# This is a white pig
+
+pig.Quantity()
+# haha,the pig is young
+
+pig.__Price()
+# AttributeError: 'Pig' object has no attribute '__Price'
+
+pig.SalePrice()
+# The saleprice is  2970
+
+pig._Pig__Price()
+# The saleprice is  2970
 ```
-- 在这里，MyList 继承 父类 list 中的所有属性和方法，可以作为子类MyList的方法直接使用
 
-- **多态**：不同对象 对 同一方法 响应不同的行动
+# 继承
+
+```python
+class DerivedClassName(BaseClassName):
+	statement-1
+	.
+	.
+	.
+	statement-N
+```
+- BaseClassName: 基类/父类； DerivedClassName：派生类/子类
+
+- 如果 子类中定义与父类同名的方法或属性，则会自动覆盖父类对应的方法和属性
+
+- 如果子类中定义了 __init__（）方法，则会自动覆盖父类的 __init__ 方法
+
+- 如果同时需要初始化父类的__init__() 方法，可以通过两种方法：
+1. 在DerivedClassName 的 __init__()函数中 添加 BaseClassName.__init__(self)
+2. 利用 super函数，super().__init__()
+
+```python
+import random
+
+class Fish:
+	def __init__(self):
+		self.x = random.randint(0,10)
+		self.y = random.randint(0,10)
+		
+	def move(self):
+		self.x -= 1
+		print("我的位置",self.x, self.y)
+		
+class GoldFish(Fish):
+	pass
+
+class Shark(Fish):
+	## Shark类 继承了Fish基类
+	## Shark也重新定义了自己的 __init__ 类，则会自动覆盖基类的__init__类
+	def __init__(self):
+		self.hungry = True
+		
+	def eat(self):
+		if self.hungry:
+			print("I am hungry, i need something to eat")
+			self.hungry = False
+		else:
+			print("I am eat up! I want to sleep now.")
+			self.hungry = True
 
 
+g = GoldFish()
+g.move()
+
+# 我的位置 9 0
+
+s = Shark()
+s.move()
+# AttributeError: 'Shark' object has no attribute 'x'
+# - 在这里，由于Shark对基类__init__进行了override，而在Shark中没有定义self.x 所以报错。
+```
+
+```python
+## 对基类的__init__()方法进行调用，即可解决上述问题
+
+import random
+
+class Fish:
+	def __init__(self):
+		self.x = random.randint(0,10)
+		self.y = random.randint(0,10)
+		
+	def move(self):
+		self.x -= 1
+		print("我的位置",self.x, self.y)
+
+class Shark(Fish):
+	## Shark类 继承了Fish基类
+	## Shark也重新定义了自己的 __init__ 类，则会自动覆盖基类的__init__类
+	def __init__(self):
+        # 1. super()函数
+# 		super().__init__()
+        # 2. 调用未绑定的基类的__init__方法
+		Fish.__init__(self)
+		self.hungry = True
+		
+	def eat(self):
+		if self.hungry:
+			print("I am hungry, i need something to eat")
+			self.hungry = False
+		else:
+			print("I am eat up! I want to sleep now.")
+			self.hungry = True
 
 
+s = Shark()
+s.move()
+# 我的位置 2 3
+```
+- python 虽然也支持多继承，但是一般不推荐使用。
+
+# 魔法方法 __str__, __init__,__new__,等等
 
 
-
-
-
-
-
-
-
+？？？？？？？？？？？？？？？？？？？？？？？？？？？？
 
 
 
